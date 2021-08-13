@@ -2,6 +2,10 @@ import sys
 from socket import *
 import json
 import time
+
+from termcolor import colored
+
+import Device
 from threading import Thread
 
 import timer
@@ -13,8 +17,8 @@ class Server:
         print("sever avviato..")
 
         SERVER_IP = "192.168.1.234"
-        SERVER_PORT=49160
-        server.bind((SERVER_IP,SERVER_PORT))
+        SERVER_PORT=8080
+        server.bind(("localhost",SERVER_PORT))
         server.listen(2)
 
     def start_listen(self):
@@ -24,7 +28,7 @@ class Server:
                 connectionSocket, addr = server.accept()
                 print("sever in ascolto..")
                 message=connectionSocket.recv(1024)
-                print(message)
+                print(colored("SERVER --> Messaggio ricevuto = " + message.decode(), 'blue'))
             except IOError:
                 print("sever error..")
     def read_file(jFile):
