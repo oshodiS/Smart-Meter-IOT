@@ -13,19 +13,20 @@ import json
 
 
 class Device(Thread):
-    def __init__(self, device_ip_address, server_ip_address, server_port):
+    def __init__(self, device_ip_address, server_ip_address, server_port, frequency):
         self.device_ip_address = device_ip_address
         self.server_ip_address = server_ip_address
         self.server_port = server_port
+        self.frequency = frequency
         Thread.__init__(self)
         self.daemon = True
-        self.send = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+        self.UDP_socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
         self.data = []
         print(colored(f"Device {server_ip_address}  creato", "yellow"))
 
     def send_values(self, values):
         try:
-            self.send.sendto(values.encode(), (self.server_ip_address, int(self.server_port)))
+            self.UDP_socket.sendto(values.encode(), (self.server_ip_address, int(self.server_port)))
             print(colored(f"CLIENT --> Messaggio Inviato =  {values}", 'green'))
         except Exception as exc:
             print(colored(f"Client error = {exc}", 'red'))
@@ -55,4 +56,4 @@ class Device(Thread):
 
 
 if __name__ == "__main__":
-    client1 = Device("127.0.0.1", "127.0.0.1", 8080, 12)
+    print("not executable on main")
