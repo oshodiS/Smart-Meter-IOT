@@ -26,22 +26,21 @@ class Server:
             try:
                 connectionSocket, addr = server.accept()
              
-                message=connectionSocket.recv(1024)
+                message=connectionSocket.recv(4096)
                 print(message.decode())
                 json_obj = json.loads(message.decode())
                 print(colored("SERVER --> Messaggio ricevuto = " + json_obj[0]["device_ip_address"] +
                               " -  " + str(json_obj[0]["time_of_measurement"]) +
                               " -  " + str(json_obj[0]["temperature"])
                               + " -  " + str(json_obj[0]["humidity"]), 'blue'))
-            except IOError:
-                print("sever error..")
+            except IOError as errore:
+                print(f"sever error..{errore}")
     def read_file(jFile):
         f= open(jFile,)
         data = json.load(f)
         for i in data['temperature']:
             print(i) #cambiare in base a come è il json
 
-print("costruttore!")
 srv=Server()
 srv.server_iniz()
 srv.start_listen()

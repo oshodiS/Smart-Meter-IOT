@@ -9,11 +9,11 @@ def send_to_server(message_to_send):
     #il gateway invia il messaggio al Cloud in TCP
     socket_gateway = socket(AF_INET, SOCK_STREAM)
     socket_gateway.connect(("localhost",49153))
-    while True:
-        try:
-            socket_gateway.send(message_to_send)
-        except Exception as exc:
-         print(colored(f"Server exception {exc}", 'red'))
+    try:
+        socket_gateway.send(message_to_send)
+    except Exception as exc:
+        print(colored(f"Server exception {exc}", 'red'))
+
 
 if __name__ == '__main__':
     UDP_socket = socket(AF_INET, SOCK_DGRAM)
@@ -26,7 +26,6 @@ if __name__ == '__main__':
         try:
             message, addr = UDP_socket.recvfrom(4096)
             #MANDATI IL MESSAGE IN TCP
-            print(message.decode())
             send_to_server(message)
 
         except Exception as exc:
