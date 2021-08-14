@@ -11,7 +11,7 @@ def send_to_server(message_to_send):
     socket_gateway.connect(("localhost",49153))
     while True:
         try:
-            socket_gateway.send(message_to_send.encode())
+            socket_gateway.send(message_to_send)
         except Exception as exc:
          print(colored(f"Server exception {exc}", 'red'))
 
