@@ -5,7 +5,6 @@ import time
 
 from termcolor import colored
 
-import Device
 from threading import Thread
 
 import timer
@@ -17,7 +16,7 @@ class Server:
         print("sever avviato..")
 
         SERVER_IP = "192.168.1.234"
-        SERVER_PORT=8080
+        SERVER_PORT=49153
         server.bind(("localhost",SERVER_PORT))
         server.listen(2)
 
@@ -26,9 +25,14 @@ class Server:
             print("sever in ascolto..")
             try:
                 connectionSocket, addr = server.accept()
-                print("sever in ascolto..")
+             
                 message=connectionSocket.recv(1024)
-                print(colored("SERVER --> Messaggio ricevuto = " + message.decode(), 'blue'))
+                print(message.decode())
+                json_obj = json.loads(message.decode())
+                print(colored("SERVER --> Messaggio ricevuto = " + json_obj[0]["device_ip_address"] +
+                              " -  " + str(json_obj[0]["time_of_measurement"]) +
+                              " -  " + str(json_obj[0]["temperature"])
+                              + " -  " + str(json_obj[0]["humidity"]), 'blue'))
             except IOError:
                 print("sever error..")
     def read_file(jFile):
