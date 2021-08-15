@@ -3,9 +3,10 @@ from Device import Device
 from socket import *
 import time
 from termcolor import colored
-from threading import Thread
+from threading import Thread, Lock
+from datetime import datetime
 
-
+lock = Lock()
 class Gateway(Thread):
     def __init__(self, internal_ip, UDP_port, external_ip, server_TCP_port, number_of_devices):
         # inizializzazione varibili
@@ -32,6 +33,12 @@ class Gateway(Thread):
         except Exception as exc:
             print(colored(f"Server exception {exc}", 'red'))
 
+    def __print_time_to_receve_UDP(self, loaded_json):
+        total_millisec = datetime.now() - datetime.strptime(loaded_json[0], "%Y-%m-%d %H:%M:%S.%f")
+        print(colored(
+            "\n La trasmissione UDP ha richiesto " + str(total_millisec.total_seconds() * 1000) + "  millisecondi " ,
+            "yellow"))
+
     def run(self):
         print(colored("Gateway started", "yellow"))
         self.TCP_socket.connect(("localhost", self.server_TCP_port))
@@ -41,14 +48,24 @@ class Gateway(Thread):
         messages = []
         while True:
             try:
-                # Attende il file dai device
+
                 while device_count < self.number_of_devices:
+                    # Attende il file dai device
                     message, addr = self.UDP_socket.recvfrom(4096)
-                    messages.append(json.loads(message))
+                    loaded_json = json.loads(message.decode())
+                    # Stampa il tempo di trasmissione effettuando la differanza tra i timestamp
+                    self.__print_time_to_receve_UDP(json.loads(message.decode()))
+                    # Rimuove i time stamp delle trasmissioni in UDP e crea una unica struttura dati
+                    # con tutte le misurazioni dei device
+                    for i in range(1, (len(loaded_json)-1)):
+                        messages.append(loaded_json[i])
+
                     device_count += 1
                 # Manda il messaggio in TCP al server
+                messages.insert(0, str(datetime.now()))
                 self.send_to_server(json.dumps(messages).encode())
 
+                # reset delle variabili per attendere nuove trasmissioni in UDP
                 device_count = 0
                 messages = []
             except Exception as exc:

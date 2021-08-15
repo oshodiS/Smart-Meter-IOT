@@ -14,10 +14,16 @@ def print_heading():
 if __name__ == "__main__":
     print_heading()
     frequency = 0
-    while frequency <= 0:
-        frequency = int(input("In quanti secondi si vogliono simulare 24 ore : "))
-        if frequency <= 0:
-            print("Inserisci un valore maggiore di 0")
+
+    while True:
+        try:
+            while frequency <= 0:
+                frequency = int(input("In quanti secondi si vogliono simulare 24 ore : "))
+                if frequency <= 0:
+                    raise ValueError()
+            break
+        except ValueError:
+            print("Valore inserito non valito. Atteso un valore <= 1")
 
     gateway = Gateway("192.168.0.1", 8080, "10.10.10.1", 8081, 4)
     server = Server("10.10.10.2", 8081)

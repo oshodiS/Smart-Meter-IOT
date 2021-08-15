@@ -3,7 +3,8 @@ import json
 from termcolor import colored
 from threading import Thread, Lock
 import threading
-
+import numpy as np
+from datetime import datetime
 
 class Server(Thread):
     def __init__(self, server_ip, server_port):
@@ -27,12 +28,12 @@ class Server(Thread):
                 if not message:
                     break
                 json_collection = json.loads(message.decode())
-                for json_obj in json_collection:
-                    for json_row in json_obj:
-                        str_message = json_row["device_ip_address"] + " -  " + str(json_row["time_of_measurement"]) \
-                             + " -  " + str(json_row["temperature"]) + " -  " + str(json_row["humidity"])
-                        print(colored(f"SERVER --> Messaggio ricevuto = {str_message} \n", 'blue'))
-                        self.__append_data(str_message)
+                self.__print_time_to_receve_TCP(json_collection)
+                for i in range(1, (len(json_collection)-1)):
+                    str_message = json_collection[i]["device_ip_address"] + " -  " + str(json_collection[i]["time_of_measurement"]) \
+                                  + " -  " + str(json_collection[i]["temperature"]) + " -  " + str(json_collection[i]["humidity"])
+                    print(colored(f"SERVER --> Messaggio ricevuto = {str_message} \n", 'blue'))
+                    self.__append_data(str_message)
             connection_socket.close()
         except IOError as errore:
             print(f"Sever error: {errore}")
@@ -50,3 +51,9 @@ class Server(Thread):
         f = open(self.file_name, "a")
         f.write(data + "\n")
         f.close()
+
+    def __print_time_to_receve_TCP(self, loaded_json):
+        total_millisec = datetime.now() - datetime.strptime(loaded_json[0], "%Y-%m-%d %H:%M:%S.%f")
+        print(colored(
+            "\n La trasmissione TCP ha richiesto " + str(total_millisec.total_seconds() * 1000) + "  millisecondi " ,
+            "yellow"))
