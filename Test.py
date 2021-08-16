@@ -24,7 +24,7 @@ if __name__ == "__main__":
             break
         except ValueError:
             print("Valore inserito non valito. Atteso un valore <= 1")
-
+    #creazione dei dispositivi
     gateway = Gateway("192.168.0.1", 8080, "10.10.10.1", 8081, 4)
     server = Server("10.10.10.2", 8081)
     device_1 = Device("192.168.0.10", "localhost", 8080, frequency)
@@ -32,6 +32,7 @@ if __name__ == "__main__":
     device_3 = Device("192.168.0.12", "localhost", 8080, frequency)
     device_4 = Device("192.168.0.13", "localhost", 8080, frequency)
 
+    #inizializzazione dispositivi
     server.start()
     gateway.start()
     device_1.start()

@@ -47,7 +47,7 @@ class Device(Thread):
     def run(self):
         print(colored(f"Device {self.device_ip_address}  created ", "yellow"))
         while True:
-            # Esegue 24 misure in un giorno, la lunghezza del giorno è specificata fa frequency nel costruttore
+            # Esegue 4 misure in un giorno, la lunghezza del giorno è specificata da frequency nel costruttore
             for i in range(NUMBER_OF_SAMPLES):
                 # aggiunge all'array di dizionari il valore di una lettura
                 self.data.append(self.__generate_random_measurements())
