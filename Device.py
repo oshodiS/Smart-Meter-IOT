@@ -45,7 +45,7 @@ class Device(Thread):
         }
 
     def run(self):
-        print(colored(f"Device {self.device_ip_address}  created ", "yellow"))
+        print(colored(f"Device {self.device_ip_address}  created \n ", "yellow"))
         while True:
             # Esegue 4 misure in un giorno, la lunghezza del giorno è specificata da frequency nel costruttore
             for i in range(NUMBER_OF_SAMPLES):

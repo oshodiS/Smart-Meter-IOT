@@ -7,6 +7,9 @@ from threading import Thread, Lock
 from datetime import datetime
 
 lock = Lock()
+BUFFER_SIZE=4096
+
+
 class Gateway(Thread):
     def __init__(self, internal_ip, UDP_port, external_ip, server_TCP_port, number_of_devices):
         # inizializzazione varibili
@@ -57,12 +60,14 @@ class Gateway(Thread):
                     self.__print_time_to_receve_UDP(json.loads(message.decode()))
                     # Rimuove i time stamp delle trasmissioni in UDP e crea una unica struttura dati
                     # con tutte le misurazioni dei device
-                    for i in range(1, (len(loaded_json)-1)):
+                    for i in range(1, len(loaded_json)):
                         messages.append(loaded_json[i])
 
                     device_count += 1
                 # Manda il messaggio in TCP al server
+
                 messages.insert(0, str(datetime.now()))
+
                 self.send_to_server(json.dumps(messages).encode())
 
                 # reset delle variabili per attendere nuove trasmissioni in UDP
@@ -70,3 +75,5 @@ class Gateway(Thread):
                 messages = []
             except Exception as exc:
                 print(colored(f"Gateway exception {exc}", 'red'))
+    def get_buffer_size(self):
+      return BUFFER_SIZE

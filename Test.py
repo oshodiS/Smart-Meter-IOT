@@ -2,6 +2,8 @@ from os import system, name
 from Device import Device
 from Server import Server
 from Gateway import Gateway
+from termcolor import colored
+
 import sys
 import time
 
@@ -39,5 +41,6 @@ if __name__ == "__main__":
     device_2.start()
     device_3.start()
     device_4.start()
-
+    print(colored("Server buffer size "+str(server.get_buffer_size()),"green"))
+    print(colored("Gateway buffer size "+str(gateway.get_buffer_size()),"green"))
     i = input()

@@ -6,6 +6,7 @@ import threading
 import numpy as np
 from datetime import datetime
 
+BUFFER_SIZE=16384
 class Server(Thread):
     def __init__(self, server_ip, server_port):
         # socket initialization
@@ -25,14 +26,14 @@ class Server(Thread):
 
         try:
             while True:
-                message = connection_socket.recv(16384)
+                message = connection_socket.recv(BUFFER_SIZE)
                 if not message:
                     break
                 #crea un file jason con le misurazioni
                 json_collection = json.loads(message.decode())
                 self.__print_time_to_receve_TCP(json_collection)
                 #stampa i dati delle misurazioni memorizzati nel file json
-                for i in range(1, (len(json_collection)-1)):
+                for i in range(1, (len(json_collection))):
                     str_message = json_collection[i]["device_ip_address"] + " -  " + str(json_collection[i]["time_of_measurement"]) \
                                   + " -  " + str(json_collection[i]["temperature"]) + " -  " + str(json_collection[i]["humidity"])
                     print(colored(f"SERVER --> Messaggio ricevuto = {str_message} \n", 'blue'))
@@ -63,3 +64,6 @@ class Server(Thread):
         print(colored(
             "\n La trasmissione TCP ha richiesto " + str(total_millisec.total_seconds() * 1000) + "  millisecondi " ,
             "yellow"))
+
+    def get_buffer_size(self):
+        return BUFFER_SIZE
