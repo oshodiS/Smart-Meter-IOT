@@ -1,8 +1,11 @@
 import json
+
+import colorama
+
 from Device import Device
 from socket import *
 import time
-from termcolor import colored
+from termcolor import *
 from threading import Thread, Lock
 from datetime import datetime
 
@@ -28,6 +31,7 @@ class Gateway(Thread):
         # Inizializzazione thread
         Thread.__init__(self)
         self.daemon = True
+        colorama.init()
 
     def send_to_server(self, message_to_send):
         # il gateway invia il messaggio al Cloud in TCP

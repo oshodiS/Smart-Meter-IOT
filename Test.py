@@ -1,8 +1,11 @@
 from os import system, name
+
+import colorama
+
 from Device import Device
 from Server import Server
 from Gateway import Gateway
-from termcolor import colored
+from termcolor import *
 
 import sys
 import time
@@ -14,6 +17,7 @@ def print_heading():
 
 
 if __name__ == "__main__":
+    colorama.init()
     print_heading()
     frequency = 0
 
@@ -27,6 +31,7 @@ if __name__ == "__main__":
         except ValueError:
             print("Valore inserito non valito. Atteso un valore <= 1")
     #creazione dei dispositivi
+    #assegnazione degli indirizzi IP
     gateway = Gateway("192.168.0.1", 8080, "10.10.10.1", 8081, 4)
     server = Server("10.10.10.2", 8081)
     device_1 = Device("192.168.0.10", "localhost", 8080, frequency)

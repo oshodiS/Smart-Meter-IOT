@@ -1,6 +1,8 @@
 from socket import *
 import json
-from termcolor import colored
+
+import colorama
+from termcolor import *
 from threading import Thread, Lock
 import threading
 import numpy as np
@@ -20,6 +22,7 @@ class Server(Thread):
         # Thread setting
         Thread.__init__(self)
         self.daemon = True
+        colorama.init()
 
 
     def on_new_client(self, connection_socket, addr):

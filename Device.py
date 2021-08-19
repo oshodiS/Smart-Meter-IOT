@@ -2,7 +2,9 @@ import random
 import socket
 import time
 from threading import Thread
-from termcolor import colored
+
+import colorama
+from termcolor import *
 import datetime
 import json
 import sys
@@ -26,6 +28,7 @@ class Device(Thread):
         # Thread setting
         Thread.__init__(self)
         self.daemon = True
+        colorama.init()
         # socket initialization
         self.UDP_socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 
