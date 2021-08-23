@@ -25,6 +25,7 @@ class Device(Thread):
         self.gateway_port = gateway_port
         self.frequency = frequency
         self.data = []
+        self.flag = True
         # Thread setting
         Thread.__init__(self)
         self.daemon = True
@@ -49,7 +50,7 @@ class Device(Thread):
 
     def run(self):
         print(colored(f"Device {self.device_ip_address}  created \n ", "yellow"))
-        while True:
+        while self.flag:
             # Esegue 4 misure in un giorno, la lunghezza del giorno è specificata da frequency nel costruttore
             for i in range(NUMBER_OF_SAMPLES):
                 # aggiunge all'array di dizionari il valore di una lettura
@@ -60,7 +61,9 @@ class Device(Thread):
             self.send_values(json.dumps(self.data))
             # Dopo l'invio dei dati vengono resettati
             self.data = []
-
+            
+    def stop(self):
+        self.flag = False
 
 if __name__ == "__main__":
     print("not executable as main")

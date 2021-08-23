@@ -17,6 +17,7 @@ class Gateway(Thread):
     def __init__(self, internal_ip, UDP_port, external_ip, server_TCP_port, number_of_devices):
         # inizializzazione varibili
         self.number_of_devices = number_of_devices
+        self.flag = True
 
         # inizializzazione socket UDP
         self.UDP_socket = socket(AF_INET, SOCK_DGRAM)
@@ -43,8 +44,9 @@ class Gateway(Thread):
     def __print_time_to_receve_UDP(self, loaded_json):
         total_millisec = datetime.now() - datetime.strptime(loaded_json[0], "%Y-%m-%d %H:%M:%S.%f")
         print(colored(
-            "\n La trasmissione UDP ha richiesto " + str(total_millisec.total_seconds() * 1000) + "  millisecondi " ,
+            "\n La trasmissione UDP ha richiesto " + str(total_millisec.total_seconds() * 1000.0) + "  millisecondi " ,
             "yellow"))
+
 
     def run(self):
         print(colored("Gateway started", "yellow"))
@@ -53,7 +55,7 @@ class Gateway(Thread):
         device_count = 0
         # contiene tutti i messaggi dei device, quando tutti i device hanno inviato vengono girati al server
         messages = []
-        while True:
+        while self.flag:
             try:
 
                 while device_count < self.number_of_devices:
@@ -79,5 +81,10 @@ class Gateway(Thread):
                 messages = []
             except Exception as exc:
                 print(colored(f"Gateway exception {exc}", 'red'))
+                
+                
+    def stop(self):
+        self.flag = False
+                
     def get_buffer_size(self):
       return BUFFER_SIZE

@@ -19,6 +19,7 @@ class Server(Thread):
         self.server_ip = server_ip
         self.server_port = server_port
         self.file_name = "storico_misurazioni.txt"
+        self.flag = True
         # Thread setting
         Thread.__init__(self)
         self.daemon = True
@@ -49,12 +50,15 @@ class Server(Thread):
     def run(self):
         print(colored(f"Sever {self.server_ip} listening ...", "yellow"))
         thread_esistenti = 0
-        while True:
+        while self.flag:
             connection_socket, addr = self.TCP_socket.accept()
             # self.on_new_client(connection_socket, addr)
             threading.Thread(target=self.on_new_client, args=(connection_socket, addr)).start()
         self.TCP_socket.close()
-
+        
+        
+    def stop(self):
+        self.flag = False
 
 #aggiunge a un file le misurazioni fatte per creare uno storico dei dati
     def __append_data(self, data):
@@ -65,7 +69,7 @@ class Server(Thread):
     def __print_time_to_receve_TCP(self, loaded_json):
         total_millisec = datetime.now() - datetime.strptime(loaded_json[0], "%Y-%m-%d %H:%M:%S.%f")
         print(colored(
-            "\n La trasmissione TCP ha richiesto " + str(total_millisec.total_seconds() * 1000) + "  millisecondi " ,
+            "\n La trasmissione TCP ha richiesto " + str(total_millisec.total_seconds() * 1000.0) + "  millisecondi " ,
             "yellow"))
 
     def get_buffer_size(self):

@@ -6,7 +6,7 @@ from Device import Device
 from Server import Server
 from Gateway import Gateway
 from termcolor import *
-
+import signal
 import sys
 import time
 
@@ -15,10 +15,22 @@ def print_heading():
     print("Traccia 1 - Progetto IoT \n "
           "Shola Oshodi - Daniel Guariglia \n\n")
 
+def close_thread_on_exit(signal, frame):
+    print("Exit...")
+    device_1.stop()
+    device_2.stop()
+    device_3.stop()
+    device_4.stop()
+    gateway.stop()
+    server.stop()
+    sys.exit(0)
+
 
 if __name__ == "__main__":
     colorama.init()
     print_heading()
+    signal.signal(signal.SIGINT, close_thread_on_exit)
+    signal.signal(signal.SIGTERM, close_thread_on_exit)
     frequency = 0
 
     while True:
